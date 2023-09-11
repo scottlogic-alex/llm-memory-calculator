@@ -1,11 +1,13 @@
-import { llama1Models, llama2Models } from './llama-models';
+import { ModelSuite } from './model-suite';
+import { llama1Models, llama2Models, type LlamaConfig } from './llama-models';
 
-export enum ModelArch {
-  Llama1 = 'LLaMA',
-  Llama2 = 'Llama 2',
-}
+export type ModelConfig = LlamaConfig;
 
 export const models = {
-  [ModelArch.Llama1]: llama1Models,
-  [ModelArch.Llama2]: llama2Models,
-} as const satisfies { [key in ModelArch]: object };
+  [ModelSuite.Llama1]: llama1Models,
+  [ModelSuite.Llama2]: llama2Models,
+} as const satisfies {
+  [arch in ModelSuite]: {
+    [model: string]: ModelConfig;
+  }
+};
