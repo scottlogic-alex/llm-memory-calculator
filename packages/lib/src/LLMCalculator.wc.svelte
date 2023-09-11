@@ -31,7 +31,6 @@
       Model
       <select
         bind:value={modelChosenForArch[modelArch]}
-        on:change={() => modelChosenForArch = modelChosenForArch}
       >
         {#each Object.keys(models[modelArch]) as model_}
           <option value={model_}>{model_}</option>
