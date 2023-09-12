@@ -13,7 +13,8 @@
     acc[arch] = possibleKeys[0];
     return acc;
   }, {}) as ModelChoiceBySuite;
-  let modelConfig: ModelConfig = models[modelSuite][modelChoiceBySuite[modelSuite] as unknown as keyof typeof models[typeof modelSuite]];
+  let modelConfig: ModelConfig;
+  $: modelConfig = models[modelSuite][modelChoiceBySuite[modelSuite] as unknown as keyof typeof models[typeof modelSuite]];
 </script>
 
 <div class="llm-calc-container">
@@ -66,9 +67,16 @@
 </div>
 
 <style>
+  pre {
+    text-align: left;
+    font-size: 0.8em;
+  }
   .row {
     display: flex;
     flex-wrap: wrap;
+  }
+  .llm-calc-container {
+    text-align: left;
   }
   
   .def-col {
