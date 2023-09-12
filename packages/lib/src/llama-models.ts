@@ -1,4 +1,5 @@
 import { ModelFamily } from './model-family';
+import type { ParamCountAbstract } from './param-count-abstract';
 import type { AbstractModelConfig } from './abstract-model-config';
 
 export enum LLamaAttnType {
@@ -7,18 +8,18 @@ export enum LLamaAttnType {
 }
 
 export interface LlamaConfigAbstract<AttnType extends LLamaAttnType> extends AbstractModelConfig<ModelFamily.Llama>  {
-  attn_type: AttnType;
-  hidden_dim: number;
-  intermediate_size: number;
-  hidden_layers: number;
+  attnType: AttnType;
+  hiddenDim: number;
+  intermediateSize: number;
+  hiddenLayers: number;
 }
 export interface LlamaConfigMHA extends LlamaConfigAbstract<LLamaAttnType.MHA> {
-  attn_heads: number;
+  attnHeads: number;
 }
 
 export interface LlamaConfigGQA extends LlamaConfigAbstract<LLamaAttnType.GQA> {
-  q_heads: number;
-  kv_heads: number;
+  qHeads: number;
+  kvHeads: number;
 }
 
 export type LlamaConfig = LlamaConfigMHA | LlamaConfigGQA;
@@ -34,42 +35,43 @@ export type Llama2Models = {
   [modelName in '7b' | '13b']: LlamaConfigMHA;
 } & Llama2GQAModels;
 
+export const llamaHeadDim = 128;
 export const llamaVocabSize = 32000;
 
 export const llama1Models: Llama1Models = Object.entries({
   // https://huggingface.co/huggyllama/llama-7b/blob/main/config.json
   '7b': {
-    hidden_dim: 4096,
-    intermediate_size: 11008,
-    hidden_layers: 32,
-    attn_heads: 32,
+    hiddenDim: 4096,
+    intermediateSize: 11008,
+    hiddenLayers: 32,
+    attnHeads: 32,
   },
   // https://huggingface.co/huggyllama/llama-13b/blob/main/config.json
   '13b': {
-    hidden_dim: 5120,
-    intermediate_size: 13824,
-    hidden_layers: 40,
-    attn_heads: 40,
+    hiddenDim: 5120,
+    intermediateSize: 13824,
+    hiddenLayers: 40,
+    attnHeads: 40,
   },
   // https://huggingface.co/huggyllama/llama-30b/blob/main/config.json
   '33b': {
-    hidden_dim: 6656,
-    intermediate_size: 17920,
-    hidden_layers: 60,
-    attn_heads: 52,
+    hiddenDim: 6656,
+    intermediateSize: 17920,
+    hiddenLayers: 60,
+    attnHeads: 52,
   },
   // https://huggingface.co/huggyllama/llama-65b/blob/main/config.json
   '65b': {
-    hidden_dim: 8192,
-    intermediate_size: 22016,
-    hidden_layers: 80,
-    attn_heads: 64,
+    hiddenDim: 8192,
+    intermediateSize: 22016,
+    hiddenLayers: 80,
+    attnHeads: 64,
   }
 } as const satisfies {
-  [key in keyof Llama1Models]: Omit<LlamaConfigMHA, 'family' | 'attn_type'>
-}).reduce((acc: Partial<Llama1Models>, [key, config]: [key: string, config: Omit<LlamaConfigMHA, 'family' | 'attn_type'>]): Partial<Llama1Models> => {
+  [key in keyof Llama1Models]: Omit<LlamaConfigMHA, 'family' | 'attnType'>
+}).reduce((acc: Partial<Llama1Models>, [key, config]: [key: string, config: Omit<LlamaConfigMHA, 'family' | 'attnType'>]): Partial<Llama1Models> => {
   acc[key] = {
-    attn_type: LLamaAttnType.MHA,
+    attnType: LLamaAttnType.MHA,
     family: ModelFamily.Llama,
     ...config,
   } satisfies LlamaConfigMHA;
@@ -84,28 +86,113 @@ export const llama2Models: Llama2Models = {
   ...Object.entries({
     // https://huggingface.co/codellama/CodeLlama-34b-hf/blob/main/config.json
     '34b': {
-      hidden_dim: 8192,
-      intermediate_size: 22016,
-      hidden_layers: 48,
-      q_heads: 64,
-      kv_heads: 8,
+      hiddenDim: 8192,
+      intermediateSize: 22016,
+      hiddenLayers: 48,
+      qHeads: 64,
+      kvHeads: 8,
     },
     // https://huggingface.co/meta-llama/Llama-2-70b-hf/blob/main/config.json
     '70b': {
-      hidden_dim: 8192,
-      intermediate_size: 28672,
-      hidden_layers: 80,
-      q_heads: 64,
-      kv_heads: 8,
+      hiddenDim: 8192,
+      intermediateSize: 28672,
+      hiddenLayers: 80,
+      qHeads: 64,
+      kvHeads: 8,
     }
   } as const satisfies {
-    [key in keyof Llama2GQAModels]: Omit<LlamaConfigGQA, 'family' | 'attn_type'>
-  }).reduce((acc: Partial<Llama2GQAModels>, [key, config]: [key: string, config: Omit<LlamaConfigGQA, 'family' | 'attn_type'>]): Partial<Llama2GQAModels> => {
+    [key in keyof Llama2GQAModels]: Omit<LlamaConfigGQA, 'family' | 'attnType'>
+  }).reduce((acc: Partial<Llama2GQAModels>, [key, config]: [key: string, config: Omit<LlamaConfigGQA, 'family' | 'attnType'>]): Partial<Llama2GQAModels> => {
     acc[key] = {
-      attn_type: LLamaAttnType.GQA,
+      attnType: LLamaAttnType.GQA,
       family: ModelFamily.Llama,
       ...config,
     } satisfies LlamaConfigGQA;
     return acc;
   }, {}) as Llama2GQAModels
+};
+
+const getReadHeadCount = (config: LlamaConfig): number => {
+  const { attnType } = config;
+  switch(attnType) {
+    case LLamaAttnType.GQA:
+      return config.qHeads;
+    case LLamaAttnType.MHA:
+      return config.attnHeads;
+    default:
+      throw new Error(`Unimplemented LLamaAttnType: ${attnType satisfies never}`);
+  }
+};
+
+const getWriteHeadCount = (config: LlamaConfig): number => {
+  const { attnType } = config;
+  switch(attnType) {
+    case LLamaAttnType.GQA:
+      return config.kvHeads;
+    case LLamaAttnType.MHA:
+      return config.attnHeads;
+    default:
+      throw new Error(`Unimplemented LLamaAttnType: ${attnType satisfies never}`);
+  }
+};
+
+export type LlamaParamCount = ParamCountAbstract;
+
+export const countParams = (config: LlamaConfig): LlamaParamCount => {
+  const {
+    hiddenDim,
+    intermediateSize,
+    hiddenLayers,
+  } = config;
+  const embedding = llamaVocabSize * hiddenDim;
+  const unembedding = embedding;
+
+  const readHeads: number = getReadHeadCount(config);
+  const writeHeads: number = getWriteHeadCount(config);
+
+  const qProj = hiddenDim * readHeads * llamaHeadDim;
+  const kProj = hiddenDim * writeHeads * llamaHeadDim;
+  const vProj = kProj;
+  const oProj = hiddenDim ** 2;
+
+  const gateProj = hiddenDim * intermediateSize;
+  const upProj = gateProj, downProj = gateProj;
+
+  const inputLayerNorm = hiddenDim;
+  const postAttnLayerNorm = inputLayerNorm,
+    norm = inputLayerNorm;
+  
+  const perLayerLN = inputLayerNorm + postAttnLayerNorm;
+
+  const perLayerAttnProj
+  = qProj
+  + kProj
+  + vProj
+  + oProj;
+
+  const perLayerFFN
+  = gateProj
+  + upProj
+  + downProj;
+
+  const total
+  = embedding
+  + hiddenLayers * (
+    perLayerAttnProj
+    + perLayerFFN
+    + perLayerLN
+  )
+  + norm
+  + unembedding;
+
+  return {
+    embedding,
+    unembedding,
+    layers: hiddenLayers,
+    nonRepeatedLN: norm,
+    perLayerLN,
+    perLayerAttnProj,
+    perLayerFFN,
+    total,
+  } satisfies LlamaParamCount;
 };

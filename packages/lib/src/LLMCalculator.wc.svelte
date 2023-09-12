@@ -45,6 +45,7 @@
   </form>
 
   <model-config-dl conf={modelConfig}/>
+  <model-params conf={modelConfig}/>
 
   <!-- <table>
     <colgroup>
