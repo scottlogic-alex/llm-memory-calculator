@@ -6,4 +6,11 @@
   $: total = 0;
 </script>
 
-<span title={`${param} params`}>{(param/total*100).toFixed(2)}%</span>
+<span title={`${param} params`} class="mono">{(param/total*100).toFixed(2)}%</span>
+
+<style>
+  .mono {
+    font-family: 'Monaco', Courier, monospace;
+    font-size: 0.9em;
+  }
+</style>

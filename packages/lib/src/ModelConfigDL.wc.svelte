@@ -10,19 +10,27 @@
 <dl>
   {#if conf?.family === ModelFamily.Llama}
     <dt>Hidden dimension</dt>
-    <dd>{conf.hiddenDim}</dd>
+    <dd class="mono">{conf.hiddenDim}</dd>
     <dt>Hidden layers</dt>
-    <dd>{conf.hiddenLayers}</dd>
+    <dd class="mono">{conf.hiddenLayers}</dd>
     <dt>Intermediate size</dt>
-    <dd>{conf.intermediateSize}</dd>
+    <dd class="mono">{conf.intermediateSize}</dd>
     {#if conf.attnType === LLamaAttnType.MHA}
       <dt>Attention heads</dt>
-      <dd>{conf.attnHeads}</dd>
+      <dd class="mono">{conf.attnHeads}</dd>
     {:else if conf.attnType === LLamaAttnType.GQA}
       <dt>Read heads</dt>
-      <dd>{conf.qHeads}</dd>
+      <dd class="mono">{conf.qHeads}</dd>
       <dt>Write heads</dt>
-      <dd>{conf.kvHeads}</dd>
+      <dd class="mono">{conf.kvHeads}</dd>
     {/if}
   {/if}
 </dl>
+
+<style>
+  .mono {
+    font-family: 'Monaco', Courier, monospace;
+    font-size: 0.9em;
+    /* text-align: right; */
+  }
+</style>

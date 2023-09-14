@@ -77,6 +77,7 @@
   .row {
     display: flex;
     flex-wrap: wrap;
+    gap: 1em;
   }
   .llm-calc-container {
     text-align: left;
