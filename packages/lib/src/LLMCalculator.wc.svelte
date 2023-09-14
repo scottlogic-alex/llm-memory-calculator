@@ -19,35 +19,41 @@
 
 <div class="llm-calc-container">
   <form>
-    <fieldset>
-      <legend>Model</legend>
-      <label class="row">
-        Architecture
-        <select
-          bind:value={modelSuite}
-        >
-          {#each modelSuites as modelSuite_}
-            <option value={modelSuite_}>{modelSuite_}</option>
-          {/each}
-        </select>
-      </label>
-      <label class="row">
-        Model
-        <select
-          bind:value={modelChoiceBySuite[modelSuite]}
-        >
-          {#each Object.keys(models[modelSuite]) as model_}
-            <option value={model_}>{model_}</option>
-          {/each}
-        </select>
-      </label>
-    </fieldset>
+    <div class="row">
+      <fieldset>
+        <legend>Model</legend>
+        <label class="row">
+          Architecture
+          <select
+            bind:value={modelSuite}
+          >
+            {#each modelSuites as modelSuite_}
+              <option value={modelSuite_}>{modelSuite_}</option>
+            {/each}
+          </select>
+        </label>
+        <label class="row">
+          Model
+          <select
+            bind:value={modelChoiceBySuite[modelSuite]}
+          >
+            {#each Object.keys(models[modelSuite]) as model_}
+              <option value={model_}>{model_}</option>
+            {/each}
+          </select>
+        </label>
+        <div class="row">
+          <model-config-dl conf={modelConfig}/>
+          <model-params conf={modelConfig}/>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Optimizer</legend>
+      </fieldset>
+    </div>
   </form>
 
-  <div class="row">
-    <model-config-dl conf={modelConfig}/>
-    <model-params conf={modelConfig}/>
-  </div>
+  
 
   <!-- <table>
     <colgroup>
