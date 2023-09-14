@@ -3,6 +3,7 @@
 <script lang="ts">
   import { ModelSuite } from './model-suite';
   import { models, type ModelConfig } from './model-db';
+  import { OptimizerFamily } from './optimizer-family';
   const modelSuites: ModelSuite[] = Object.values(ModelSuite);
   let modelSuite: ModelSuite = ModelSuite.Llama1;
   type ModelChoiceBySuite = {
@@ -15,6 +16,9 @@
   }, {}) as ModelChoiceBySuite;
   let modelConfig: ModelConfig;
   $: modelConfig = models[modelSuite][modelChoiceBySuite[modelSuite] as unknown as keyof typeof models[typeof modelSuite]];
+
+  let optimizerFamily: OptimizerFamily = OptimizerFamily.Adam;
+  
 </script>
 
 <div class="llm-calc-container">
@@ -24,9 +28,7 @@
         <legend>Model</legend>
         <label class="row">
           Architecture
-          <select
-            bind:value={modelSuite}
-          >
+          <select bind:value={modelSuite}>
             {#each modelSuites as modelSuite_}
               <option value={modelSuite_}>{modelSuite_}</option>
             {/each}
@@ -49,6 +51,11 @@
       </fieldset>
       <fieldset>
         <legend>Optimizer</legend>
+        <select bind:value={optimizerFamily}>
+          {#each Object.keys(OptimizerFamily) as optimizerFamily_}
+            <option value={optimizerFamily_}>{optimizerFamily_}</option>
+          {/each}
+        </select>
       </fieldset>
     </div>
   </form>
