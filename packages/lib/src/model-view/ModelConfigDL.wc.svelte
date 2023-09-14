@@ -30,6 +30,7 @@
 <style>
   dl {
     margin-top: 0;
+    margin-bottom: 0.5em;
   }
   .mono {
     font-family: 'Monaco', Courier, monospace;
