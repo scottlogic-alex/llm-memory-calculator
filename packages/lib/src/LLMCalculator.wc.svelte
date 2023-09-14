@@ -44,8 +44,10 @@
     </fieldset>
   </form>
 
-  <model-config-dl conf={modelConfig}/>
-  <model-params conf={modelConfig}/>
+  <div class="row">
+    <model-config-dl conf={modelConfig}/>
+    <model-params conf={modelConfig}/>
+  </div>
 
   <!-- <table>
     <colgroup>
