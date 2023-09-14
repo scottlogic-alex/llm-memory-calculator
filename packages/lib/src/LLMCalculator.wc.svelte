@@ -1,8 +1,8 @@
 <svelte:options tag="llm-calc"/>
 
 <script lang="ts">
-  import { ModelSuite } from './model-suite';
-  import { models, type ModelConfig } from './model-db';
+  import { ModelSuite } from './model-model/model-suite';
+  import { models, type ModelConfig } from './model-model/model-db';
   import { OptimizerFamily } from './optimizer-family';
   const modelSuites: ModelSuite[] = Object.values(ModelSuite);
   let modelSuite: ModelSuite = ModelSuite.Llama1;

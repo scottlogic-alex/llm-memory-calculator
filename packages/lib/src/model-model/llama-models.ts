@@ -1,5 +1,5 @@
 import { ModelFamily } from './model-family';
-import type { ParamCountAbstract } from './param-count-abstract';
+import type { ParamCountAbstract } from '../param-count-abstract';
 import type { AbstractModelConfig } from './abstract-model-config';
 
 export enum LLamaAttnType {

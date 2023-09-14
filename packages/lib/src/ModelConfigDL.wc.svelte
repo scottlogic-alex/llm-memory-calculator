@@ -1,9 +1,9 @@
 <svelte:options tag="model-config-dl"/>
 
 <script lang="ts">
-  import { ModelFamily } from './model-family';
-  import type { ModelConfig } from './model-db';
-  import { LLamaAttnType } from './llama-models';
+  import { ModelFamily } from './model-model/model-family';
+  import type { ModelConfig } from './model-model/model-db';
+  import { LLamaAttnType } from './model-model/llama-models';
   export let conf: ModelConfig;
 </script>
 
