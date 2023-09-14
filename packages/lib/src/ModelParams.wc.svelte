@@ -2,7 +2,7 @@
 
 <script lang="ts">
   import type { ModelConfig } from './model-model/model-db';
-  import { countParams, type ParamCount } from './param-count';
+  import { countParams, type ParamCount } from './param-model/param-count';
   export let conf: ModelConfig;
   let params: ParamCount | undefined;
   $: params = conf ? countParams(conf): undefined;
