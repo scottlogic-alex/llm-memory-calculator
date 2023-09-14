@@ -31,17 +31,15 @@
 
 <dl>
   {#if params}
-    <dt>Embedding</dt>
-    <dd>{embedding}</dd>
+    <dt>Embedding+Unembedding</dt>
+    <dd><param-pretty param={embedding+unembedding} total={total}/></dd>
     <dt>Attention projections</dt>
-    <dd>{layers * perLayerAttnProj}</dd>
+    <dd><param-pretty param={layers * perLayerAttnProj} total={total}/></dd>
     <dt>FeedForward</dt>
-    <dd>{layers * perLayerFFN}</dd>
+    <dd><param-pretty param={layers * perLayerFFN} total={total}/></dd>
     <dt>LayerNorms</dt>
-    <dd>{nonRepeatedLN + layers * perLayerLN}</dd>
-    <dt>Unembedding</dt>
-    <dd>{unembedding}</dd>
+    <dd><param-pretty param={nonRepeatedLN + layers * perLayerLN} total={total}/></dd>
     <dt><strong>Total</strong></dt>
-    <dd>{total}</dd>
+    <dd><param-total param={total} total={total}/></dd>
   {/if}
 </dl>
