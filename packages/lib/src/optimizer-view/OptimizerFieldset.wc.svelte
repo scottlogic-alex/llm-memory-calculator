@@ -12,4 +12,7 @@
         <option value={optimizerFamily_}>{optimizerFamily_}</option>
       {/each}
     </select>
+    {#if optimizerFamily == OptimizerFamily.Adam}
+      <optim-adam/>
+    {/if}
 </fieldset>
