@@ -45,8 +45,14 @@
           </select>
         </label>
         <div class="row">
-          <model-config-dl conf={modelConfig}/>
-          <model-params conf={modelConfig}/>
+          <div>
+            <h4 class="definition-list-header">Config</h4>
+            <model-config-dl conf={modelConfig}/>
+          </div>
+          <div>
+            <h4 class="definition-list-header">Params</h4>
+            <model-params conf={modelConfig}/>
+          </div>
         </div>
       </fieldset>
       <fieldset>
@@ -94,6 +100,9 @@
   }
   .llm-calc-container {
     text-align: left;
+  }
+  .definition-list-header {
+    margin-bottom: 0;
   }
   
   .def-col {

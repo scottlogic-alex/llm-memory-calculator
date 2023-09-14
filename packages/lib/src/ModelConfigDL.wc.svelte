@@ -28,6 +28,9 @@
 </dl>
 
 <style>
+  dl {
+    margin-top: 0;
+  }
   .mono {
     font-family: 'Monaco', Courier, monospace;
     font-size: 0.9em;

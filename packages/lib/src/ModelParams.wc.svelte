@@ -43,3 +43,9 @@
     <dd><param-total param={total} total={total}/></dd>
   {/if}
 </dl>
+
+<style>
+  dl {
+    margin-top: 0;
+  }
+</style>
