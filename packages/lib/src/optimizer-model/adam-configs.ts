@@ -5,19 +5,19 @@ import type { AbstractOptimizerConfig } from './optimizer-config-abstract';
 //     AdamW = 'AdamW',
 // }
 
-export enum AdamDataTypes {
+export enum AdamDataType {
     float32 = '32-bit',
     int8 = '8-bit',
 }
 
-export interface AdamAbstractConfig<D extends AdamDataTypes> extends AbstractOptimizerConfig<OptimizerFamily.Adam> {
+export interface AdamAbstractConfig<D extends AdamDataType> extends AbstractOptimizerConfig<OptimizerFamily.Adam> {
     dtype: D;
 }
 
-export type Adam32Bit = AbstractOptimizerConfig<OptimizerFamily.Adam>;
+export type Adam32BitConfig = AbstractOptimizerConfig<OptimizerFamily.Adam>;
 
-export interface Adam8Bit extends AbstractOptimizerConfig<OptimizerFamily.Adam> {
+export interface Adam8BitConfig extends AbstractOptimizerConfig<OptimizerFamily.Adam> {
     doubleQuant: boolean;
 }
 
-export type AdamConfig = Adam8Bit | Adam32Bit;
+export type AdamConfig = Adam8BitConfig | Adam32BitConfig;
