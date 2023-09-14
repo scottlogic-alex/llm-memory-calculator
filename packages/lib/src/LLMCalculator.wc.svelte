@@ -8,8 +8,6 @@
     </div>
   </form>
 
-  
-
   <!-- <table>
     <colgroup>
       <col class="def-col"/>
@@ -31,10 +29,6 @@
 </div>
 
 <style>
-  pre {
-    text-align: left;
-    font-size: 0.8em;
-  }
   .row {
     display: flex;
     flex-wrap: wrap;
@@ -43,12 +37,9 @@
   .llm-calc-container {
     text-align: left;
   }
-  .definition-list-header {
-    margin-bottom: 0;
-  }
   
-  .def-col {
+  /* .def-col {
     background-color: aliceblue;
     font-weight: 700;
-  }
+  } */
 </style>
