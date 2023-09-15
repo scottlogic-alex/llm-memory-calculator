@@ -1,12 +1,13 @@
 <svelte:options tag="model-fieldset"/>
 
 <script lang="ts">
+  // import '../model-model/model-store';
   import { ModelSuite } from '../model-model/model-suite';
   import { models, type ModelConfig } from '../model-model/model-db';
   const modelSuites: ModelSuite[] = Object.values(ModelSuite);
   let modelSuite: ModelSuite = ModelSuite.Llama1;
   type ModelChoiceBySuite = {
-    [suite in ModelSuite]: [keyof (typeof models)[suite]]
+    [suite in ModelSuite]: keyof (typeof models)[suite]
   }
   let modelChoiceBySuite: ModelChoiceBySuite = Object.values(ModelSuite).reduce(<A extends ModelSuite>(acc: Partial<ModelChoiceBySuite>, arch: A): Partial<ModelChoiceBySuite> => {
     const possibleKeys: keyof (typeof models)[A] = (Object.keys(models[arch]) as unknown as keyof (typeof models)[A]);
@@ -14,7 +15,7 @@
     return acc;
   }, {}) as ModelChoiceBySuite;
   let modelConfig: ModelConfig;
-  $: modelConfig = models[modelSuite][modelChoiceBySuite[modelSuite] as unknown as keyof typeof models[typeof modelSuite]];
+  $: modelConfig = models[modelSuite][modelChoiceBySuite[modelSuite]];
 </script>
 
 <fieldset>

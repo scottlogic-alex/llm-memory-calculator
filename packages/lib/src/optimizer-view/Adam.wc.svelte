@@ -11,6 +11,10 @@
     <div class="column">
         <label><input type="radio" bind:group={$adamDtype} value={AdamDataType.float32}/>32-bit</label>
         <label><input type="radio" bind:group={$adamDtype} value={AdamDataType.int8}/>8-bit</label>
+        <dl>
+          <dt>Hey</dt>
+          <dd>What</dd>
+        </dl>
     </div>
 </div>
 
