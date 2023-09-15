@@ -15,9 +15,6 @@ export interface AdamAbstractConfig<D extends AdamDataType> extends AbstractOpti
 }
 
 export type Adam32BitConfig = AbstractOptimizerConfig<OptimizerFamily.Adam>;
-
-export interface Adam8BitConfig extends AbstractOptimizerConfig<OptimizerFamily.Adam> {
-    doubleQuant: boolean;
-}
+export type Adam8BitConfig = AbstractOptimizerConfig<OptimizerFamily.Adam>;
 
 export type AdamConfig = Adam8BitConfig | Adam32BitConfig;

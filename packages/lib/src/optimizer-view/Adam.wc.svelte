@@ -3,7 +3,7 @@
 <script lang="ts">
     import { type Writable, type Readable } from 'svelte/store';
     import { type AdamConfig, AdamDataType } from '../optimizer-model/adam-configs';
-    import { adamConfig, adamDtype, adam8BitDoubleQuant } from '../optimizer-model/adam-store';
+    import { adamConfig, adamDtype } from '../optimizer-model/adam-store';
 </script>
 
 <div>
