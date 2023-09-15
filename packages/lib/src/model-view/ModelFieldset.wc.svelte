@@ -7,7 +7,7 @@
   const modelSuites: ModelSuite[] = Object.values(ModelSuite);
   let modelSuite: ModelSuite = ModelSuite.Llama1;
   type ModelChoiceBySuite = {
-    [suite in ModelSuite]: keyof (typeof models)[suite]
+    [suite in ModelSuite]: keyof (typeof models)[suite];
   }
   let modelChoiceBySuite: ModelChoiceBySuite = Object.values(ModelSuite).reduce(<A extends ModelSuite>(acc: Partial<ModelChoiceBySuite>, arch: A): Partial<ModelChoiceBySuite> => {
     const possibleKeys: keyof (typeof models)[A] = (Object.keys(models[arch]) as unknown as keyof (typeof models)[A]);
