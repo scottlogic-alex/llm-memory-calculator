@@ -1,13 +1,16 @@
-import { ModelSuite } from './model-suite';
-import { llama1Models, llama2Models, type LlamaConfig } from './llama-models';
+import { ModelFamily } from './model-family';
+import type { modelSuites } from './model-suite';
+import { llamaSuites, type LlamaConfig } from './llama-models';
 
 export type ModelConfig = LlamaConfig;
 
 export const models = {
-  [ModelSuite.Llama1]: llama1Models,
-  [ModelSuite.Llama2]: llama2Models,
+  [ModelFamily.Llama]: llamaSuites,
+  [ModelFamily.Falcon]: {},
 } as const satisfies {
-  [arch in ModelSuite]: {
-    [model: string]: ModelConfig;
-  }
+  [family in ModelFamily]: {
+    [suite in (typeof modelSuites)[family][number]]: {
+      [model: string]: ModelConfig;
+    };
+  };
 };

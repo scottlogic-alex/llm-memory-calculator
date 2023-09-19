@@ -1,4 +1,4 @@
 export enum ModelFamily {
     Llama = 'Llama',
-    Falcon = 'Falcon',
+    // Falcon = 'Falcon',
 }
