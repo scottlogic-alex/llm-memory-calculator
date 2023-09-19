@@ -6,7 +6,7 @@ export type ModelConfig = LlamaConfig;
 
 export const models = {
   [ModelFamily.Llama]: llamaSuites,
-  [ModelFamily.Falcon]: {},
+  // [ModelFamily.Falcon]: {},
 } as const satisfies {
   [family in ModelFamily]: {
     [suite in (typeof modelSuites)[family][number]]: {
