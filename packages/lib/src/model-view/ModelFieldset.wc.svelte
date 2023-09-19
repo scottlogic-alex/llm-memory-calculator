@@ -1,28 +1,35 @@
 <svelte:options tag="model-fieldset"/>
 
 <script lang="ts">
-  // import '../model-model/model-store';
+  import type { ChangeEventHandler } from 'svelte/elements';
+  import {
+    modelSuite,
+    modelChoiceBySuite,
+    setModelChoiceBySuite,
+    type NextModelChoice,
+  } from '../model-model/model-store';
   import { ModelSuite } from '../model-model/model-suite';
   import { models, type ModelConfig } from '../model-model/model-db';
   const modelSuites: ModelSuite[] = Object.values(ModelSuite);
-  let modelSuite: ModelSuite = ModelSuite.Llama1;
-  type ModelChoiceBySuite = {
-    [suite in ModelSuite]: keyof (typeof models)[suite];
-  }
-  let modelChoiceBySuite: ModelChoiceBySuite = Object.values(ModelSuite).reduce(<A extends ModelSuite>(acc: Partial<ModelChoiceBySuite>, arch: A): Partial<ModelChoiceBySuite> => {
-    const possibleKeys: keyof (typeof models)[A] = (Object.keys(models[arch]) as unknown as keyof (typeof models)[A]);
-    acc[arch] = possibleKeys[0];
-    return acc;
-  }, {}) as ModelChoiceBySuite;
   let modelConfig: ModelConfig;
-  $: modelConfig = models[modelSuite][modelChoiceBySuite[modelSuite]];
+  $: modelConfig = models[$modelSuite][$modelChoiceBySuite[$modelSuite]];
+
+  let onChooseModelBySuite: ChangeEventHandler<HTMLSelectElement> =
+    <Suite extends ModelSuite>(e: Event): void => {
+      const target = e.target as HTMLOptionElement;
+      const action: NextModelChoice<Suite> = {
+        suite: $modelSuite as Suite,
+        model: target.value as keyof (typeof models)[Suite],
+      };
+      setModelChoiceBySuite(action);
+    };
 </script>
 
 <fieldset>
   <legend>Model</legend>
   <label class="row">
     Architecture
-    <select bind:value={modelSuite}>
+    <select bind:value={$modelSuite}>
       {#each modelSuites as modelSuite_}
         <option value={modelSuite_}>{modelSuite_}</option>
       {/each}
@@ -31,9 +38,10 @@
   <label class="row">
     Model
     <select
-      bind:value={modelChoiceBySuite[modelSuite]}
+      value={$modelChoiceBySuite[$modelSuite]}
+      on:change={onChooseModelBySuite}
     >
-      {#each Object.keys(models[modelSuite]) as model_}
+      {#each Object.keys(models[$modelSuite]) as model_}
         <option value={model_}>{model_}</option>
       {/each}
     </select>
