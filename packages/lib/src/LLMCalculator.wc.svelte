@@ -6,6 +6,9 @@
       <model-fieldset/>
       <optimizer-fieldset/>
     </div>
+    <div class="row">
+      <compute-fieldset/>
+    </div>
   </form>
 
   <!-- <table>
