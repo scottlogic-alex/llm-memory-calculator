@@ -1,9 +1,16 @@
 <svelte:options tag="model-fieldset"/>
 
 <script lang="ts">
+  import type { ChangeEventHandler } from 'svelte/elements';
   import { models } from '../model-model/model-db';
-  import { ModelFamily } from '../model-model/model-family';
-  import { setSuiteChoiceByFamily } from '../model-store/model-choice';
+  import type { ModelFamily } from '../model-model/model-family';
+  import {
+    family,
+    suiteChoiceByFamily,
+    setSuiteChoiceByFamily,
+    type SuiteChoiceAction
+  } from '../model-store/model-choice';
+  import { assert } from '../ts-util/assert';
 
   type SuitesByFamily<
     F extends ModelFamily,
@@ -20,41 +27,40 @@
       ): SuitesByFamily<F, S> => [family, Object.keys(suites) as S[]]
     );
 
-  console.log(suitesByFamily);
+  const hasOptionValue = <
+    F extends ModelFamily
+  >(option: HTMLOptionElement): option is HTMLOptionElement & { __value: SuiteChoiceAction<F> } =>
+    '__value' in option && typeof option.__value === 'object' && option.__value !== null;
 
-  // import type { ChangeEventHandler } from 'svelte/elements';
-  // import {
-  //   modelSuite,
-  //   modelChoiceBySuite,
-  //   setModelChoiceBySuite,
-  //   type NextModelChoice,
-  // } from '../model-store/model-choice';
-  // import { ModelSuite } from '../model-model/model-suite';
-  // import { models, type ModelConfig } from '../model-model/model-db';
-  // const modelSuites: ModelSuite[] = Object.values(ModelSuite);
-  // let modelConfig: ModelConfig;
-  // $: modelConfig = models[$modelSuite][$modelChoiceBySuite[$modelSuite]];
-
-  // let onChooseModelBySuite: ChangeEventHandler<HTMLSelectElement> =
-  //   <Suite extends ModelSuite>(e: Event): void => {
-  //     const target = e.target as HTMLOptionElement;
-  //     const action: NextModelChoice<Suite> = {
-  //       suite: $modelSuite as Suite,
-  //       model: target.value as keyof (typeof models)[Suite],
-  //     };
-  //     setModelChoiceBySuite(action);
-  //   };
+  let onChooseSuiteByFamily: ChangeEventHandler<HTMLSelectElement> =
+    <
+      F extends ModelFamily
+    >(e: Event): void => {
+      const target = e.target as HTMLSelectElement;
+      const option = target.querySelector('option:checked') as HTMLOptionElement;
+      assert(hasOptionValue<F>(option));
+      console.log(option.__value);
+      const action: SuiteChoiceAction<F> = option.__value;
+      setSuiteChoiceByFamily(action);
+    };
 </script>
 
 <fieldset>
   <legend>Model</legend>
   <label class="row">
     Architecture
-    <!-- <select bind:value={$modelSuite}>
-      {#each modelSuites as modelSuite_}
-        <option value={modelSuite_}>{modelSuite_}</option>
+    <select
+      value={$suiteChoiceByFamily[$family]}
+      on:change={onChooseSuiteByFamily}
+    >
+      {#each suitesByFamily as [family, suites]}
+        <optgroup label={family}>
+          {#each suites as suite_}
+            <option value={{family, suite:suite_}}>{suite_}</option>
+          {/each}
+        </optgroup>
       {/each}
-    </select> -->
+    </select>
   </label>
   <label class="row">
     Model
