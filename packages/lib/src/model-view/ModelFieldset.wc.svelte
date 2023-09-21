@@ -12,19 +12,13 @@
   } from '../model-store/model-choice';
   import { assert } from '../ts-util/assert';
 
-  type SuitesByFamily<
-    F extends ModelFamily,
-    S extends keyof (typeof models)[F]
-  > = [family: F, suites: S[]];
+  type SuitesByFamily<F extends ModelFamily> = [family: F, suites: Array<keyof (typeof models)[F]>];
 
-  const suitesByFamily: SuitesByFamily<ModelFamily, keyof (typeof models)[ModelFamily]>[] =
+  const suitesByFamily: SuitesByFamily<ModelFamily>[] =
     Object.entries(models).map(
-      <
-        F extends ModelFamily,
-        S extends keyof (typeof models)[F]
-      >(
+      <F extends ModelFamily>(
         [family, suites]: [F, (typeof models)[F]]
-      ): SuitesByFamily<F, S> => [family, Object.keys(suites) as S[]]
+      ): SuitesByFamily<F> => [family, Object.keys(suites) as Array<keyof (typeof models)[F]>]
     );
 
   const hasOptionValue = <
