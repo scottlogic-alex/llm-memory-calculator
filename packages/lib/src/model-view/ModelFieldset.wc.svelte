@@ -58,6 +58,12 @@
       <model-params/>
     </div>
   </div>
+  <div class="row">
+    <div>
+      <h4 class="definition-list-header">Master weights</h4>
+      <master-weights/>
+    </div>
+  </div>
 </fieldset>
 
 <style>
