@@ -1,27 +1,24 @@
 import { derived, type Readable } from 'svelte/store';
-import type { ModelFamily } from '../model-model/model-family';
 import type { ModelConfig } from '../model-model/model-db';
 import { models } from '../model-model/model-db';
 import {
-    family,
-    suiteChoiceByFamily,
-    modelChoiceByFamilyAndSuite,
-    type SuiteChoiceByFamily,
-    type ModelChoiceByFamilyAndSuite
+    familyAndSuite,
+    modelByFamilyAndSuite,
+    type FamilyAndSuite,
+    type ModelByFamilyAndSuite,
 } from './model-choice';
 
-export const modelConfig: Readable<ModelConfig> = derived([
-    family,
-    suiteChoiceByFamily,
-    modelChoiceByFamilyAndSuite,
-    ], ([
-        family_,
-        suiteChoiceByFamily_,
-        modelChoiceByFamilyAndSuite_
+export const modelConfig: Readable<ModelConfig> = derived(
+    [
+        familyAndSuite,
+        modelByFamilyAndSuite,
+    ],
+    ([
+        { family, suite },
+        modelByFamilyAndSuite,
     ]: [
-        ModelFamily,
-        SuiteChoiceByFamily,
-        ModelChoiceByFamilyAndSuite
+        FamilyAndSuite,
+        ModelByFamilyAndSuite,
     ]): ModelConfig =>
-        models[family_][suiteChoiceByFamily_[family_]][modelChoiceByFamilyAndSuite_[suiteChoiceByFamily_[family_]]]
+        models[family][suite][modelByFamilyAndSuite[family][suite]]
     );
