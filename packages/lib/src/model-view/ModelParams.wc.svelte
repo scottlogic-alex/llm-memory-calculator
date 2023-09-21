@@ -1,36 +1,31 @@
 <svelte:options tag="model-params"/>
 
 <script lang="ts">
-  import type { ModelConfig } from '../model-model/model-db';
-  import { countParams, type ParamCount } from '../param-model/param-count';
-  export let conf: ModelConfig;
-  let params: ParamCount | undefined;
-  $: params = conf ? countParams(conf): undefined;
-  let embedding=0,
-    unembedding=0,
-    layers=0,
-    nonRepeatedLN=0,
-    perLayerLN=0,
-    perLayerAttnProj=0,
-    perLayerFFN=0,
-    total=0;
-  $:
-  if (params) {
-    ({
-      embedding,
-      unembedding,
-      layers,
-      nonRepeatedLN,
-      perLayerLN,
-      perLayerAttnProj,
-      perLayerFFN,
-      total,
-    } = params);
-  }
+  import type { ParamCount } from '../param-model/param-count';
+  import { paramCount } from '../param-store/param-count';
+  let {
+    embedding,
+    unembedding,
+    layers,
+    nonRepeatedLN,
+    perLayerLN,
+    perLayerAttnProj,
+    perLayerFFN,
+    total,
+  }: ParamCount = $paramCount;
+  $: ({
+    embedding,
+    unembedding,
+    layers,
+    nonRepeatedLN,
+    perLayerLN,
+    perLayerAttnProj,
+    perLayerFFN,
+    total,
+  } = $paramCount);
 </script>
 
 <dl>
-  {#if params}
     <dt>Embedding+Unembedding</dt>
     <dd><param-pretty param={embedding+unembedding} total={total}/></dd>
     <dt>Attention projections</dt>
@@ -41,7 +36,6 @@
     <dd><param-pretty param={nonRepeatedLN + layers * perLayerLN} total={total}/></dd>
     <dt><strong>Total</strong></dt>
     <dd><param-total param={total} total={total}/></dd>
-  {/if}
 </dl>
 
 <style>

@@ -55,7 +55,7 @@
     </div>
     <div>
       <h4 class="definition-list-header">Params</h4>
-      <!-- <model-params conf={modelConfig}/> -->
+      <model-params/>
     </div>
   </div>
 </fieldset>
