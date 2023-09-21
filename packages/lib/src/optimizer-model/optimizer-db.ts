@@ -1,5 +1,5 @@
 // import { OptimizerFamily } from './optimizer-family';
-import type { AdamConfig } from './adam-configs';
+import type { AdamConfig } from './adam-config';
 
 export type OptimizerConfig = AdamConfig;
 
