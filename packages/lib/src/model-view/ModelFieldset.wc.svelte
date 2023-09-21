@@ -23,31 +23,33 @@
 
 <fieldset>
   <legend>Model</legend>
-  <label class="row">
-    Architecture
-    <select
-      bind:value={$familyAndSuite}
-    >
-      {#each Object.entries(familyAndSuitesByFamily) as [family, familyAndSuites]}
-        <optgroup label={family}>
-          {#each familyAndSuites as familyAndSuite_}
-            <option value={familyAndSuite_}>{familyAndSuite_.suite}</option>
-          {/each}
-        </optgroup>
-      {/each}
-    </select>
-  </label>
-  <label class="row">
-    Model
-    <select
-      value={$modelByFamilyAndSuite[$familyAndSuite.family][$familyAndSuite.suite]}
-      on:change={onChooseModelBySuite}
-    >
-      {#each Object.keys(models[$familyAndSuite.family][$familyAndSuite.suite]) as model_}
-        <option value={model_}>{model_}</option>
-      {/each}
-    </select>
-  </label>
+  <div class="form-group">
+    <label class="row">
+      Suite
+      <select
+        bind:value={$familyAndSuite}
+      >
+        {#each Object.entries(familyAndSuitesByFamily) as [family, familyAndSuites]}
+          <optgroup label={family}>
+            {#each familyAndSuites as familyAndSuite_}
+              <option value={familyAndSuite_}>{familyAndSuite_.suite}</option>
+            {/each}
+          </optgroup>
+        {/each}
+      </select>
+    </label>
+    <label class="row">
+      Model
+      <select
+        value={$modelByFamilyAndSuite[$familyAndSuite.family][$familyAndSuite.suite]}
+        on:change={onChooseModelBySuite}
+      >
+        {#each Object.keys(models[$familyAndSuite.family][$familyAndSuite.suite]) as model_}
+          <option value={model_}>{model_}</option>
+        {/each}
+      </select>
+    </label>
+  </div>
   <div class="row">
     <div>
       <h4 class="definition-list-header">Config</h4>
@@ -72,7 +74,11 @@
     flex-wrap: wrap;
     gap: 1em;
   }
+  .form-group {
+    margin-bottom: 1em;
+  }
   .definition-list-header {
+    margin-top: 0;
     margin-bottom: 0;
   }
 </style>
