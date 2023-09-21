@@ -88,7 +88,3 @@ export const [modelByFamilyAndSuite, setModelByFamilyAndSuite]: Reducible<ModelB
     initialModelByFamilyAndSuite,
     reduceModelByFamilyAndSuite,
 );
-
-// export const setModelByFamilyAndSuite = setModelByFamilyAndSuite_ as
-//     <FS extends FamilyAndSuite>(action: SetModelByFamilyAndSuiteAction<FS>) => void;
-// export { modelByFamilyAndSuite };

@@ -2,27 +2,26 @@
 
 <script lang="ts">
   import { ModelFamily } from '../model-model/model-family';
-  import type { ModelConfig } from '../model-model/model-db';
   import { LLamaAttnType } from '../model-model/llama-models';
-  export let conf: ModelConfig;
+  import { modelConfig as conf } from '../model-store/model-config';
 </script>
 
 <dl>
-  {#if conf?.family === ModelFamily.Llama}
+  {#if $conf.family === ModelFamily.Llama}
     <dt>Hidden dimension</dt>
-    <dd class="mono">{conf.hiddenDim}</dd>
+    <dd class="mono">{$conf.hiddenDim}</dd>
     <dt>Hidden layers</dt>
-    <dd class="mono">{conf.hiddenLayers}</dd>
+    <dd class="mono">{$conf.hiddenLayers}</dd>
     <dt>Intermediate size</dt>
-    <dd class="mono">{conf.intermediateSize}</dd>
-    {#if conf.attnType === LLamaAttnType.MHA}
+    <dd class="mono">{$conf.intermediateSize}</dd>
+    {#if $conf.attnType === LLamaAttnType.MHA}
       <dt>Attention heads</dt>
-      <dd class="mono">{conf.attnHeads}</dd>
-    {:else if conf.attnType === LLamaAttnType.GQA}
+      <dd class="mono">{$conf.attnHeads}</dd>
+    {:else if $conf.attnType === LLamaAttnType.GQA}
       <dt>Read heads</dt>
-      <dd class="mono">{conf.qHeads}</dd>
+      <dd class="mono">{$conf.qHeads}</dd>
       <dt>Write heads</dt>
-      <dd class="mono">{conf.kvHeads}</dd>
+      <dd class="mono">{$conf.kvHeads}</dd>
     {/if}
   {/if}
 </dl>
