@@ -3,48 +3,7 @@ import { models } from '../model-model/model-db';
 import { reducible, type Reducible, type Reducer } from '../store-common/reducible';
 import { ModelFamily } from '../model-model/model-family';
 
-export const family: Writable<ModelFamily> = writable(ModelFamily.Llama);
-
-export type SuiteChoiceByFamily = {
-    [family in ModelFamily]: keyof (typeof models)[family];
-}
-const initialSuiteChoiceByFamily: SuiteChoiceByFamily = Object.values(ModelFamily)
-    .reduce(
-    <F extends ModelFamily>(
-        acc: Partial<SuiteChoiceByFamily>,
-        family: F
-    ): Partial<SuiteChoiceByFamily> => {
-        const suites: Array<keyof (typeof models)[F]> = Object.keys(models[family]) as Array<keyof (typeof models)[F]>;
-        const firstSuite: keyof (typeof models)[F] = suites[0];
-        acc[family] = firstSuite as typeof acc[typeof family];
-        return acc;
-    },
-    {},
-    ) as SuiteChoiceByFamily;
-
-export interface SuiteChoiceAction<Family extends ModelFamily> {
-  family: Family,
-  suite: keyof (typeof models)[Family],
-}
-const suiteChoiceByFamilyReducer: Reducer<SuiteChoiceByFamily, SuiteChoiceAction<ModelFamily>>
-    = <Family extends ModelFamily>(
-        state: SuiteChoiceByFamily,
-        { family, suite }: SuiteChoiceAction<Family>,
-    ): SuiteChoiceByFamily => ({
-        ...state,
-        [family]: suite,
-    });
-
-const [suiteChoiceByFamily, setSuiteChoiceByFamily_]: Reducible<SuiteChoiceByFamily, SuiteChoiceAction<ModelFamily>> = reducible(
-    initialSuiteChoiceByFamily,
-    suiteChoiceByFamilyReducer,
-);
-
-export const setSuiteChoiceByFamily =
-  setSuiteChoiceByFamily_ as <Family extends ModelFamily>(action: SuiteChoiceAction<Family>) => void;
-export { suiteChoiceByFamily };
-
-export interface FamilyAndSuite<Family extends ModelFamily> {
+export interface FamilyAndSuite<Family extends ModelFamily = ModelFamily> {
     family: Family,
     suite: keyof (typeof models)[Family],
 }
@@ -55,18 +14,19 @@ export type FamilyAndSuites = {
 
 export const familyAndSuitesByFamily: FamilyAndSuites = Object.fromEntries(
     Object.entries(models).map(
-        <F extends ModelFamily>([family, suites]: [F, (typeof models)[F]]): [F, SuiteChoiceAction<F>[]] =>
+        <F extends ModelFamily>([family, suites]: [F, (typeof models)[F]]): [F, FamilyAndSuite<F>[]] =>
         [
             family,
             (Object.keys(suites) as Array<keyof (typeof models)[F]>)
-            .map<SuiteChoiceAction<F>>(
+            .map<FamilyAndSuite<F>>(
                 (suite) => ({family, suite})
             )
         ]
     )
 ) as FamilyAndSuites;
 
-export const familyAndSuite: Writable<FamilyAndSuite<ModelFamily>> = writable(familyAndSuitesByFamily[ModelFamily.Llama][0]);
+const initialFamilyAndSuite: FamilyAndSuite = familyAndSuitesByFamily[ModelFamily.Llama][0];
+export const familyAndSuite: Writable<FamilyAndSuite> = writable(initialFamilyAndSuite);
 
 export type ModelChoiceByFamilyAndSuite = {
   [family in ModelFamily]: {
@@ -104,46 +64,25 @@ const initialModelChoiceByFamilyAndSuite: ModelChoiceByFamilyAndSuite = Object.v
     {},
     ) as ModelChoiceByFamilyAndSuite;
 
-export interface ModelChoiceByFamilyAndSuiteAction<
-    Family extends ModelFamily = ModelFamily,
-    Suite extends keyof (typeof models)[Family] = keyof (typeof models)[Family],
-    Model extends keyof (typeof models)[Family][Suite] = keyof (typeof models)[Family][Suite],
+export interface ModelByFamilyAndSuite<
+    FS extends FamilyAndSuite = FamilyAndSuite
 > {
-    family: Family,
-    suite: Suite,
-    model: Model,
+    fs: FS,
+    model: keyof (typeof models)[FS['family']][FS['suite']],
 }
 
-const modelChoiceByFamilyAndSuiteReducer: Reducer<
-    ModelChoiceByFamilyAndSuite,
-    ModelChoiceByFamilyAndSuiteAction
-> = <
-        Family extends ModelFamily,
-        Suite extends keyof (typeof models)[Family],
-        Model extends keyof (typeof models)[Family][Suite],
-    >(
-        state: ModelChoiceByFamilyAndSuite,
-        { family, suite, model }: ModelChoiceByFamilyAndSuiteAction<Family, Suite, Model>,
-    ): ModelChoiceByFamilyAndSuite => ({
-        ...state,
-        [family]: {
-            ...state[family],
-            [suite]: model,
-        },
-    });
-  
-const [modelChoiceByFamilyAndSuite, setModelChoiceByFamilyAndSuite_]: Reducible<
-    ModelChoiceByFamilyAndSuite,
-    ModelChoiceByFamilyAndSuiteAction
-> = reducible(
-    initialModelChoiceByFamilyAndSuite,
-    modelChoiceByFamilyAndSuiteReducer,
-);
-  
-export const setModelChoiceByFamilyAndSuite = setModelChoiceByFamilyAndSuite_ as <
-    Family extends ModelFamily,
-    Suite extends keyof (typeof models)[Family],
-    Model extends keyof (typeof models)[Family][Suite]
->(action: ModelChoiceByFamilyAndSuiteAction<Family, Suite, Model>) => void;
+export const modelsByFamilyAndSuite: ModelByFamilyAndSuite[] = 
+    Object.values(familyAndSuitesByFamily)
+    .flatMap<ModelByFamilyAndSuite>(
+        (fss: FamilyAndSuite[]): ModelByFamilyAndSuite[] =>
+            fss.flatMap<ModelByFamilyAndSuite>(
+                <FS extends FamilyAndSuite>(fs: FS): ModelByFamilyAndSuite<FS>[] => {
+                    const modelsInSuite = Object.keys(models[fs.family][fs.suite]) as Array<ModelByFamilyAndSuite<FS>['model']>;
+                    return modelsInSuite.map<ModelByFamilyAndSuite<FS>>(
+                        <M extends keyof (typeof models)[FS['family']][FS['suite']]>(model: M) => ({fs, model})
+                    );
+                }
+            )
+    );
 
-export { modelChoiceByFamilyAndSuite };
+export const modelByFamilyAndSuite: Writable<ModelByFamilyAndSuite> = writable(modelsByFamilyAndSuite.filter(({ fs }) => fs === initialFamilyAndSuite)[0]);
