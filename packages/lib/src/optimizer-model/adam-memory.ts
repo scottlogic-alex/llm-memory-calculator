@@ -1,3 +1,5 @@
+import type { OptimizerFamily } from './optimizer-family';
+import type { AbstractOptimizerMemory } from './optimizer-memory-abstract';
 import { AdamDataType, type AdamConfig } from './adam-config';
 
 // https://arxiv.org/abs/1412.6980
@@ -7,6 +9,10 @@ export interface AdamBytesPerParam {
     grad_mean_estimate: number;
     // estimate of 2nd raw moment of gradient
     grad_var_estimate: number;
+}
+
+export interface AdamMemory extends AbstractOptimizerMemory<OptimizerFamily.Adam> {
+    bytesPerParam: AdamBytesPerParam;
 }
 
 export const getAdamBytesPerParam = ({ dtype }: AdamConfig): AdamBytesPerParam => {
