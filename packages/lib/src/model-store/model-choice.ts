@@ -28,18 +28,18 @@ export const familyAndSuitesByFamily: FamilyAndSuites = Object.fromEntries(
 const initialFamilyAndSuite: FamilyAndSuite = familyAndSuitesByFamily[ModelFamily.Llama][0];
 export const familyAndSuite: Writable<FamilyAndSuite> = writable(initialFamilyAndSuite);
 
-export type ModelChoiceByFamilyAndSuite = {
+export type ModelByFamilyAndSuite = {
   [family in ModelFamily]: {
     [suite in keyof (typeof models)[family]]: keyof (typeof models)[family][suite];
   };
 };
 
-const initialModelChoiceByFamilyAndSuite: ModelChoiceByFamilyAndSuite = Object.values(ModelFamily)
+const initialModelByFamilyAndSuite: ModelByFamilyAndSuite = Object.values(ModelFamily)
     .reduce(
     <F extends ModelFamily>(
-        acc: Partial<ModelChoiceByFamilyAndSuite>,
+        acc: Partial<ModelByFamilyAndSuite>,
         family: F
-    ): Partial<ModelChoiceByFamilyAndSuite> => {
+    ): Partial<ModelByFamilyAndSuite> => {
         const suites: Array<keyof (typeof models)[F]> = Object.keys(models[family]) as Array<keyof (typeof models)[F]>;
 
         type ModelBySuite = {
@@ -62,27 +62,33 @@ const initialModelChoiceByFamilyAndSuite: ModelChoiceByFamilyAndSuite = Object.v
         return acc;
     },
     {},
-    ) as ModelChoiceByFamilyAndSuite;
+    ) as ModelByFamilyAndSuite;
 
-export interface ModelByFamilyAndSuite<
-    FS extends FamilyAndSuite = FamilyAndSuite
-> {
-    fs: FS,
-    model: keyof (typeof models)[FS['family']][FS['suite']],
-}
+export interface SetModelByFamilyAndSuiteAction<FS extends FamilyAndSuite = FamilyAndSuite> {
+    familyAndSuite: FamilyAndSuite;
+    model: keyof (typeof models)[FS['family']][FS['suite']];
+};
 
-export const modelsByFamilyAndSuite: ModelByFamilyAndSuite[] = 
-    Object.values(familyAndSuitesByFamily)
-    .flatMap<ModelByFamilyAndSuite>(
-        (fss: FamilyAndSuite[]): ModelByFamilyAndSuite[] =>
-            fss.flatMap<ModelByFamilyAndSuite>(
-                <FS extends FamilyAndSuite>(fs: FS): ModelByFamilyAndSuite<FS>[] => {
-                    const modelsInSuite = Object.keys(models[fs.family][fs.suite]) as Array<ModelByFamilyAndSuite<FS>['model']>;
-                    return modelsInSuite.map<ModelByFamilyAndSuite<FS>>(
-                        <M extends keyof (typeof models)[FS['family']][FS['suite']]>(model: M) => ({fs, model})
-                    );
-                }
-            )
-    );
+const reduceModelByFamilyAndSuite: Reducer<ModelByFamilyAndSuite, SetModelByFamilyAndSuiteAction> =
+    <FS extends FamilyAndSuite>(
+        state: ModelByFamilyAndSuite,
+        {
+            familyAndSuite: { family, suite },
+            model,
+        }: SetModelByFamilyAndSuiteAction<FS>,
+    ): ModelByFamilyAndSuite => ({
+        ...state,
+        [family]: {
+            ...state[family],
+            [suite]: model,
+        }
+    });
 
-export const modelByFamilyAndSuite: Writable<ModelByFamilyAndSuite> = writable(modelsByFamilyAndSuite.filter(({ fs }) => fs === initialFamilyAndSuite)[0]);
+export const [modelByFamilyAndSuite, setModelByFamilyAndSuite]: Reducible<ModelByFamilyAndSuite, SetModelByFamilyAndSuiteAction> = reducible(
+    initialModelByFamilyAndSuite,
+    reduceModelByFamilyAndSuite,
+);
+
+// export const setModelByFamilyAndSuite = setModelByFamilyAndSuite_ as
+//     <FS extends FamilyAndSuite>(action: SetModelByFamilyAndSuiteAction<FS>) => void;
+// export { modelByFamilyAndSuite };
