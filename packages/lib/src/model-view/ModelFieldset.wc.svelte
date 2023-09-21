@@ -1,7 +1,27 @@
 <svelte:options tag="model-fieldset"/>
 
 <script lang="ts">
-  import '../model-store/model-choice';
+  import { models } from '../model-model/model-db';
+  import { ModelFamily } from '../model-model/model-family';
+  import { setSuiteChoiceByFamily } from '../model-store/model-choice';
+
+  type SuitesByFamily<
+    F extends ModelFamily,
+    S extends keyof (typeof models)[F]
+  > = [family: F, suites: S[]];
+
+  const suitesByFamily: SuitesByFamily<ModelFamily, keyof (typeof models)[ModelFamily]>[] =
+    Object.entries(models).map(
+      <
+        F extends ModelFamily,
+        S extends keyof (typeof models)[F]
+      >(
+        [family, suites]: [F, (typeof models)[F]]
+      ): SuitesByFamily<F, S> => [family, Object.keys(suites) as S[]]
+    );
+
+  console.log(suitesByFamily);
+
   // import type { ChangeEventHandler } from 'svelte/elements';
   // import {
   //   modelSuite,
