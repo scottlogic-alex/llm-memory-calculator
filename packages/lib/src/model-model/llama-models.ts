@@ -119,4 +119,8 @@ export const llama2Models: Llama2Models = {
 export const llamaSuites = {
   [LlamaModelSuite.Llama1]: llama1Models,
   [LlamaModelSuite.Llama2]: llama2Models,
+} as const satisfies {
+  [key in LlamaModelSuite]: {
+    [modelName: string]: LlamaConfig;
+  };
 };
