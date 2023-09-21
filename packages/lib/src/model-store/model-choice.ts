@@ -44,6 +44,30 @@ export const setSuiteChoiceByFamily =
   setSuiteChoiceByFamily_ as <Family extends ModelFamily>(action: SuiteChoiceAction<Family>) => void;
 export { suiteChoiceByFamily };
 
+export interface FamilyAndSuite<Family extends ModelFamily> {
+    family: Family,
+    suite: keyof (typeof models)[Family],
+}
+
+export type FamilyAndSuites = {
+    [family in ModelFamily]: FamilyAndSuite<family>[];
+}
+
+export const familyAndSuitesByFamily: FamilyAndSuites = Object.fromEntries(
+    Object.entries(models).map(
+        <F extends ModelFamily>([family, suites]: [F, (typeof models)[F]]): [F, SuiteChoiceAction<F>[]] =>
+        [
+            family,
+            (Object.keys(suites) as Array<keyof (typeof models)[F]>)
+            .map<SuiteChoiceAction<F>>(
+                (suite) => ({family, suite})
+            )
+        ]
+    )
+) as FamilyAndSuites;
+
+export const familyAndSuite: Writable<FamilyAndSuite<ModelFamily>> = writable(familyAndSuitesByFamily[ModelFamily.Llama][0]);
+
 export type ModelChoiceByFamilyAndSuite = {
   [family in ModelFamily]: {
     [suite in keyof (typeof models)[family]]: keyof (typeof models)[family][suite];

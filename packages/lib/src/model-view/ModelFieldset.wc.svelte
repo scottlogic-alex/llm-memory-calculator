@@ -1,42 +1,10 @@
 <svelte:options tag="model-fieldset"/>
 
 <script lang="ts">
-  import type { ChangeEventHandler } from 'svelte/elements';
-  import { models } from '../model-model/model-db';
-  import type { ModelFamily } from '../model-model/model-family';
   import {
-    family,
-    suiteChoiceByFamily,
-    setSuiteChoiceByFamily,
-    type SuiteChoiceAction
+    familyAndSuite,
+    familyAndSuitesByFamily,
   } from '../model-store/model-choice';
-  import { assert } from '../ts-util/assert';
-
-  type SuitesByFamily<F extends ModelFamily> = [family: F, suites: Array<keyof (typeof models)[F]>];
-
-  const suitesByFamily: SuitesByFamily<ModelFamily>[] =
-    Object.entries(models).map(
-      <F extends ModelFamily>(
-        [family, suites]: [F, (typeof models)[F]]
-      ): SuitesByFamily<F> => [family, Object.keys(suites) as Array<keyof (typeof models)[F]>]
-    );
-
-  const hasOptionValue = <
-    F extends ModelFamily
-  >(option: HTMLOptionElement): option is HTMLOptionElement & { __value: SuiteChoiceAction<F> } =>
-    '__value' in option && typeof option.__value === 'object' && option.__value !== null;
-
-  let onChooseSuiteByFamily: ChangeEventHandler<HTMLSelectElement> =
-    <
-      F extends ModelFamily
-    >(e: Event): void => {
-      const target = e.target as HTMLSelectElement;
-      const option = target.querySelector('option:checked') as HTMLOptionElement;
-      assert(hasOptionValue<F>(option));
-      console.log(option.__value);
-      const action: SuiteChoiceAction<F> = option.__value;
-      setSuiteChoiceByFamily(action);
-    };
 </script>
 
 <fieldset>
@@ -44,13 +12,12 @@
   <label class="row">
     Architecture
     <select
-      value={$suiteChoiceByFamily[$family]}
-      on:change={onChooseSuiteByFamily}
+      bind:value={$familyAndSuite}
     >
-      {#each suitesByFamily as [family, suites]}
+      {#each Object.entries(familyAndSuitesByFamily) as [family, familyAndSuites]}
         <optgroup label={family}>
-          {#each suites as suite_}
-            <option value={{family, suite:suite_}}>{suite_}</option>
+          {#each familyAndSuites as familyAndSuite_}
+            <option value={familyAndSuite_}>{familyAndSuite_.suite}</option>
           {/each}
         </optgroup>
       {/each}
