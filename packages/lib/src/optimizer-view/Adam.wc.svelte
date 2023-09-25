@@ -16,16 +16,16 @@
 
 <div>
   <!-- Hi, I'm Adam -->
-  <div class="form-group">
+  <div>
     <h4 class="tight-below tight-above">Datatype</h4>
-    <div class="form-group">
+    <div>
       <label><input type="radio" bind:group={$adamDtype} value={AdamDataType.float32}/>32-bit</label>
     </div>
-    <div class="form-group">
-      <label class="form-group"><input type="radio" bind:group={$adamDtype} value={AdamDataType.int8}/>8-bit</label>
+    <div>
+      <label><input type="radio" bind:group={$adamDtype} value={AdamDataType.int8}/>8-bit</label>
     </div>
   </div>
-  <div class="form-group">
+  <div>
     <h4 class="tight-below">Buffers</h4>
     <dl>
       <dt>Estimate of gradient mean</dt>
