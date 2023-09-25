@@ -3,8 +3,8 @@
 <div class="llm-calc-container">
   <form>
     <div class="row">
-      <model-fieldset/>
-      <optimizer-fieldset/>
+      <model-fieldset class="half-width"/>
+      <optimizer-fieldset class="half-width"/>
     </div>
     <div class="row">
       <compute-fieldset/>
@@ -39,6 +39,9 @@
   }
   .llm-calc-container {
     text-align: left;
+  }
+  .half-width {
+    max-width: 50%;
   }
   
   /* .def-col {
