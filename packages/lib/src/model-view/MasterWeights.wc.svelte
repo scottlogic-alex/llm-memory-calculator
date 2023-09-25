@@ -12,9 +12,9 @@
   */
 
   const onChangeLayerPrecision: ChangeEventHandler<HTMLInputElement> = ({ currentTarget }) => {
-    const { value, checked } = currentTarget;
-    const layer: PrecisionHungryLayer = value as PrecisionHungryLayer;
-    const precision: LayerWeightPrecision = checked ? LayerWeightPrecision.float : LayerWeightPrecision.half;
+    const { name, value } = currentTarget;
+    const layer: PrecisionHungryLayer = name as PrecisionHungryLayer;
+    const precision: LayerWeightPrecision = value as LayerWeightPrecision;
     const action: SetLayerWeightPrecision = {
       layer,
       precision,
@@ -37,10 +37,18 @@
   <div class="row">
     <!-- provide fp32 options for LN, embedding, unembedding -->
     {#each Object.keys($layerWeights) as layer}
-      <label class="form-control">
-        <input type="checkbox" checked={$layerWeights[layer] === LayerWeightPrecision.float} on:change|preventDefault={onChangeLayerPrecision} value={layer}>
-        {layer}: {$layerWeights[layer]}
-      </label>
+      <div class="form-group">
+        {layer}:
+        <div class="form-inline">
+          {#each Object.values(LayerWeightPrecision) as precision}
+            <label class="form-control-inline">
+              <input type="radio" name={layer} checked={$layerWeights[layer] === precision} on:change|preventDefault={onChangeLayerPrecision} value={precision}>
+              {precision}
+            </label>
+          {/each}
+        </div>
+        <!-- <pre>{layer}: {$layerWeights[layer]}</pre> -->
+      </div>
     {/each}
   </div>
 {/if}
@@ -59,8 +67,7 @@
     font-family: 'Monaco', Courier, monospace;
     font-size: 0.9em;
     /* text-align: right; */
-  }
-  
+  } 
   .row {
     display: flex;
     flex-wrap: wrap;
@@ -69,5 +76,13 @@
   .form-control {
     display: block;
     width: 100%;
+  }
+  .form-group {
+    margin-bottom: 0em;
+  }
+  .form-inline .form-group {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
   }
 </style>
