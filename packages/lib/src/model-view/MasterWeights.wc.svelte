@@ -24,36 +24,35 @@
 </script>
 
 <div class="row">
-  <label>
-    Precision
-    <select
-      bind:value={$masterWeightPrecision}
-    >
-      {#each Object.values(MasterWeightPrecision) as precision}
-        <option value={precision}>{precision}</option>
-      {/each}
-    </select>
-  </label>
-</div>
-<!-- {#if $masterWeightPrecision === MasterWeightPrecision.half} -->
-  <div class="row">
-    <!-- provide fp32 options for LN, embedding, unembedding -->
-    {#each Object.keys($layerWeights) as layer}
-      <div class="row">
-        <label class="col-3" for={`precisions-${layer}`}>{layer}:</label>
-        <div class="col-9" id={`precisions-${layer}`}>
-          {#each Object.values(LayerWeightPrecision) as precision}
-            <label>
-              <input type="radio" name={layer} checked={$layerWeights[layer] === precision} on:change|preventDefault={onChangeLayerPrecision} value={precision}>
-              {precision}
-            </label>
-          {/each}
-          <!-- <pre>{layer}: {$layerWeights[layer]}</pre> -->
-        </div>
-      </div>
+  <label class="col-3" for="master-weight-precision">Precision</label>
+  <select class="col-3" id="master-weight-precision" bind:value={$masterWeightPrecision}>
+    {#each Object.values(MasterWeightPrecision) as precision}
+      <option value={precision}>{precision}</option>
     {/each}
-  </div>
-<!-- {/if} -->
+  </select>
+</div>
+{#if $masterWeightPrecision === MasterWeightPrecision.half}
+  <fieldset>
+    <legend>Layer precision</legend>
+    <div class="row">
+      <!-- provide fp32 options for LN, embedding, unembedding -->
+      {#each Object.keys($layerWeights) as layer}
+        <div class="row">
+          <label class="col-3 form-label" for={`precisions-${layer}`}>{layer}</label>
+          <div class="col-9" id={`precisions-${layer}`}>
+            {#each Object.values(LayerWeightPrecision) as precision}
+              <label>
+                <input type="radio" name={layer} checked={$layerWeights[layer] === precision} on:change|preventDefault={onChangeLayerPrecision} value={precision}>
+                {precision}
+              </label>
+            {/each}
+            <!-- <pre>{layer}: {$layerWeights[layer]}</pre> -->
+          </div>
+        </div>
+      {/each}
+    </div>
+  </fieldset>
+{/if}
 
 <!-- <dl>
   <dt>Hi</dt>
@@ -79,6 +78,9 @@
     flex-shrink: 0;
     width: 100%;
     max-width: 100%;
+  }
+  .form-label {
+    /* font-weight: lighter; */
   }
   .col-12 {
     flex: 0 0 auto;
