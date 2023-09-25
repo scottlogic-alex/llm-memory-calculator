@@ -23,35 +23,37 @@
   };
 </script>
 
-<label class="row">
-  Precision
-  <select
-    bind:value={$masterWeightPrecision}
-  >
-    {#each Object.values(MasterWeightPrecision) as precision}
-      <option value={precision}>{precision}</option>
-    {/each}
-  </select>
-</label>
-{#if $masterWeightPrecision === MasterWeightPrecision.half}
+<div class="row">
+  <label>
+    Precision
+    <select
+      bind:value={$masterWeightPrecision}
+    >
+      {#each Object.values(MasterWeightPrecision) as precision}
+        <option value={precision}>{precision}</option>
+      {/each}
+    </select>
+  </label>
+</div>
+<!-- {#if $masterWeightPrecision === MasterWeightPrecision.half} -->
   <div class="row">
     <!-- provide fp32 options for LN, embedding, unembedding -->
     {#each Object.keys($layerWeights) as layer}
-      <div class="form-group">
-        {layer}:
-        <div class="form-inline">
+      <div class="row">
+        <label class="col-3" for={`precisions-${layer}`}>{layer}:</label>
+        <div class="col-9" id={`precisions-${layer}`}>
           {#each Object.values(LayerWeightPrecision) as precision}
-            <label class="form-control-inline">
+            <label>
               <input type="radio" name={layer} checked={$layerWeights[layer] === precision} on:change|preventDefault={onChangeLayerPrecision} value={precision}>
               {precision}
             </label>
           {/each}
+          <!-- <pre>{layer}: {$layerWeights[layer]}</pre> -->
         </div>
-        <!-- <pre>{layer}: {$layerWeights[layer]}</pre> -->
       </div>
     {/each}
   </div>
-{/if}
+<!-- {/if} -->
 
 <!-- <dl>
   <dt>Hi</dt>
@@ -71,18 +73,59 @@
   .row {
     display: flex;
     flex-wrap: wrap;
-    gap: 1em;
+    /* gap: 1em; */
   }
-  .form-control {
+  .row > * {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  .col-12 {
+    flex: 0 0 auto;
+    max-width: 100%;
+  }
+  /* .col-2 {
+    flex: 0 0 auto;
+    max-width: 16.67%;
+  }
+  .col-10 {
+    flex: 0 0 auto;
+    max-width: 83.33%;
+  } */
+  .col-3 {
+    flex: 0 0 auto;
+    max-width: 25%;
+  }
+  .col-9 {
+    flex: 0 0 auto;
+    max-width: 75%;
+  }
+  .col-4 {
+    flex: 0 0 auto;
+    max-width: 33.33%;
+  }
+  .col-8 {
+    flex: 0 0 auto;
+    max-width: 66.67%;
+  }
+  /* .form-control {
     display: block;
     width: 100%;
-  }
-  .form-group {
+  } */
+
+  /* .input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+  } */
+  /* .form-group {
     margin-bottom: 0em;
   }
   .form-inline .form-group {
     display: inline-block;
     margin-bottom: 0;
     vertical-align: middle;
-  }
+  } */
 </style>
