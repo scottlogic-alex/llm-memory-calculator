@@ -1,7 +1,9 @@
 <svelte:options tag="compute-fieldset"/>
 
 <script lang="ts">
-  import { useMixedPrecision } from '../compute-store/compute-strategy'
+  import { useMixedPrecision } from '../compute-store/compute-strategy';
+  import { MasterWeightPrecision } from '../master-weights-model/master-weights';
+  import { masterWeightPrecision } from '../master-weights-store/master-weights';
   /*
   for compute we'll need:
   - mixed-precision
@@ -18,11 +20,13 @@
 
 <fieldset>
   <legend>Compute</legend>
-  <div class="row">
-    <label>
-      <input type="checkbox" class="checkbox" bind:checked={$useMixedPrecision}>Mixed-precision
-    </label>
-  </div>
+  {#if $masterWeightPrecision === MasterWeightPrecision.float}
+    <div class="row">
+      <label>
+        <input type="checkbox" class="checkbox" bind:checked={$useMixedPrecision}>Mixed-precision
+      </label>
+    </div>
+  {/if}
 </fieldset>
 
 <style>
