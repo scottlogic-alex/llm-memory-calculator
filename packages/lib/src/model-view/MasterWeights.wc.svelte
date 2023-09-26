@@ -25,16 +25,16 @@
 
 <div class="row">
   <label class="col-3" for="master-weight-precision">Precision</label>
-  <select class="col-3" id="master-weight-precision" bind:value={$masterWeightPrecision}>
+  <select class="col-4" id="master-weight-precision" bind:value={$masterWeightPrecision}>
     {#each Object.values(MasterWeightPrecision) as precision}
       <option value={precision}>{precision}</option>
     {/each}
   </select>
 </div>
-{#if $masterWeightPrecision === MasterWeightPrecision.half}
-  <fieldset>
-    <legend>Layer precision</legend>
-    <div class="row">
+<div class="row">
+  {#if $masterWeightPrecision === MasterWeightPrecision.half}
+    <fieldset class="fill-available">
+      <legend>Layer precision</legend>
       <!-- provide fp32 options for LN, embedding, unembedding -->
       {#each Object.keys($layerWeights) as layer}
         <div class="row">
@@ -50,9 +50,9 @@
           </div>
         </div>
       {/each}
-    </div>
-  </fieldset>
-{/if}
+    </fieldset>
+  {/if}
+</div>
 
 <!-- <dl>
   <dt>Hi</dt>
@@ -84,31 +84,35 @@
   }
   .col-12 {
     flex: 0 0 auto;
-    max-width: 100%;
+    width: 100%;
   }
   /* .col-2 {
     flex: 0 0 auto;
-    max-width: 16.67%;
+    width: 16.67%;
   }
   .col-10 {
     flex: 0 0 auto;
-    max-width: 83.33%;
+    width: 83.33%;
   } */
   .col-3 {
     flex: 0 0 auto;
-    max-width: 25%;
+    width: 25%;
   }
   .col-9 {
     flex: 0 0 auto;
-    max-width: 75%;
+    width: 75%;
   }
   .col-4 {
     flex: 0 0 auto;
-    max-width: 33.33%;
+    width: 33.33%;
+  }
+  .col-6 {
+    flex: 0 0 auto;
+    width: 50%;
   }
   .col-8 {
     flex: 0 0 auto;
-    max-width: 66.67%;
+    width: 66.67%;
   }
   /* .form-control {
     display: block;
@@ -130,4 +134,9 @@
     margin-bottom: 0;
     vertical-align: middle;
   } */
+  .fill-available {
+    flex: 0 0 auto;
+    width: -webkit-fill-available;
+    width: -moz-available;
+  }
 </style>

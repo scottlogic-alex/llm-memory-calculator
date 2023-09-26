@@ -1,47 +1,61 @@
 <svelte:options tag="llm-calc"/>
 
-<div class="llm-calc-container">
-  <form>
-    <div class="row">
-      <model-fieldset class="half-width"/>
-      <optimizer-fieldset class="half-width"/>
+<form class="llm-calc-container">
+  <div class="row">
+    <div class="col-6">
+      <model-fieldset/>
     </div>
-    <div class="row">
-      <compute-fieldset/>
+    <div class="col-6">
+      <optimizer-fieldset/>
     </div>
-  </form>
+  </div>
+  <div class="row">
+    <compute-fieldset/>
+  </div>
+</form>
 
-  <!-- <table>
-    <colgroup>
-      <col class="def-col"/>
-      <col/>
-    </colgroup>
-    <thead>
-      <tr>
-        <th>Head0</th>
-        <th>Head1</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Bod0</td>
-        <td>Bod1</td>
-      </tr>
-    </tbody>
-  </table> -->
-</div>
+<!-- <table>
+  <colgroup>
+    <col class="def-col"/>
+    <col/>
+  </colgroup>
+  <thead>
+    <tr>
+      <th>Head0</th>
+      <th>Head1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Bod0</td>
+      <td>Bod1</td>
+    </tr>
+  </tbody>
+</table> -->
 
 <style>
   .row {
     display: flex;
     flex-wrap: wrap;
-    gap: 1em;
+  }
+  .row > * {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
   }
   .llm-calc-container {
     text-align: left;
   }
-  .half-width {
-    max-width: 50%;
+  .col {
+    flex: 1 1 0%;
+  }
+  .col-6 {
+    flex: 0 0 auto;
+    width: 50%;
+  }
+  .col-12 {
+    flex: 0 0 auto;
+    width: 100%;
   }
   
   /* .def-col {
