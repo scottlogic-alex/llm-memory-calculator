@@ -23,6 +23,7 @@
 
 <fieldset>
   <legend>Model</legend>
+  <!-- TODO: model-picking might be easier as (suite, model) rather than (suite) followed by (model) -->
   <div class="row">
     <label class="col-3" for="suite">Suite</label>
     <select class="col-3" id="suite" bind:value={$familyAndSuite}>

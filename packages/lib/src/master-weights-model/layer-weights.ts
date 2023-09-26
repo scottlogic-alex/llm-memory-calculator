@@ -1,6 +1,6 @@
 export enum LayerWeightPrecision {
-    float = 'single-precision',
-    half = 'half-precision'
+    float = '32-bit',
+    half = '16-bit'
 }
 
 export enum PrecisionHungryLayer {

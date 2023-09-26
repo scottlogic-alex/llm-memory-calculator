@@ -1,4 +1,4 @@
 export enum MasterWeightPrecision {
-    float = 'single-precision',
-    half = 'half-precision'
+    float = '32-bit',
+    half = '16-bit'
 }
