@@ -68,7 +68,7 @@
     font-family: 'Monaco', Courier, monospace;
     font-size: 0.9em;
     /* text-align: right; */
-  } 
+  }
   .row {
     display: flex;
     flex-wrap: wrap;
