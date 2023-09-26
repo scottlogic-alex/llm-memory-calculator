@@ -10,7 +10,9 @@
     </div>
   </div>
   <div class="row">
-    <compute-fieldset/>
+    <div class="col-6">
+      <compute-fieldset/>
+    </div>
   </div>
 </form>
 
